@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { UserEntity } from 'src/database/entity/user.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 dotenv.config();
@@ -9,7 +10,9 @@ export const PostgresDataSource: PostgresConnectionOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   type: 'postgres',
-  entities: [],
+  entities: [UserEntity],
+  migrations: ['dist/database/migration/*.js'],
   synchronize: false,
+  migrationsRun: false,
   logging: true,
 };
