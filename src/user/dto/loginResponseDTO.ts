@@ -2,7 +2,7 @@ import { Field, ObjectType, PickType } from '@nestjs/graphql';
 import { UserEntity } from 'src/database/entity/user.entity';
 
 @ObjectType()
-class loginUserData extends PickType(UserEntity, [
+export class UserDecoderData extends PickType(UserEntity, [
   'ID',
   'Name',
   'Email',
@@ -13,6 +13,6 @@ export class loginResponseDTO {
   @Field()
   loginMessage: string;
 
-  @Field(() => loginUserData)
-  userData: loginUserData;
+  @Field(() => UserDecoderData)
+  userData: UserDecoderData;
 }
