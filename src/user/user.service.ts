@@ -2,8 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { constant } from 'src/common/constant';
 import { comparePassword, hashPassword } from 'src/common/helper';
 import { UserEntity } from 'src/database/entity/user.entity';
-import { LoginUserDTO } from 'src/dto/LoginUserDTO';
-import { RegisterUserDTO } from 'src/dto/registerUserDTO';
+import { LoginUserDTO } from 'src/user/dto/LoginUserDTO';
+import { RegisterUserDTO } from 'src/user/dto/registerUserDTO';
 import { Repository } from 'typeorm';
 import {
   BadGatewayException,

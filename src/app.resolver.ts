@@ -1,5 +1,5 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { CheckConnectionDTO } from './dto/checkConnectionDTO';
+import { CheckConnectionDTO } from './user/dto/checkConnectionDTO';
 
 @Resolver()
 export class AppResolver {
