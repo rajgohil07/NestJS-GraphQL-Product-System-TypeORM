@@ -21,8 +21,30 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type loginUserData {
+  ID: Int!
+  Name: String!
+  Email: String!
+}
+
+type loginResponseDTO {
+  loginMessage: String!
+  userData: loginUserData!
+}
+
 type Query {
   checkServer: CheckConnectionDTO!
+
+  """login into the system"""
+  userLogin(UserLoginData: LoginUserDTO!): loginResponseDTO!
+}
+
+input LoginUserDTO {
+  """user input value for Email"""
+  Email: String!
+
+  """user input value for Password"""
+  Password: String!
 }
 
 type Mutation {
