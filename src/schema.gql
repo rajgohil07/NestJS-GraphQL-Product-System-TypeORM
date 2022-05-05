@@ -6,6 +6,37 @@ type CheckConnectionDTO {
   connectionStatus: String!
 }
 
+"""user entity"""
+type UserEntity {
+  ID: Int!
+  CreatedDate: DateTime!
+  UpdatedDate: DateTime!
+  Name: String!
+  Email: String!
+  Password: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
   checkServer: CheckConnectionDTO!
+}
+
+type Mutation {
+  """to register the user into the system"""
+  registerUser(registerUser: RegisterUserDTO!): UserEntity!
+}
+
+input RegisterUserDTO {
+  """user input value for Name"""
+  Name: String!
+
+  """user input value for Email"""
+  Email: String!
+
+  """user input value for Password"""
+  Password: String!
 }
