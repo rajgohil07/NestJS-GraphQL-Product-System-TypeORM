@@ -56,7 +56,7 @@ export class GQLAuthGuard extends AuthGuard('local') {
 
 ```bash
 #example
- @Injectable()
+@Injectable()
 export class PassportLocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly userService: UserService) {
     super({
