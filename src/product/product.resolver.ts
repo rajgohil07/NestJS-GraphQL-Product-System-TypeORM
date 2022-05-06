@@ -1,9 +1,11 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Query, Int } from '@nestjs/graphql';
 import { IsAuthenticated } from 'src/auth/guard/isAuthenticated.guard';
 import { User } from 'src/custom_decoder/user.decoder';
 import { ProductEntity } from 'src/database/entity/product.entity';
 import { CreateProductDTO } from './dto/createProductDTO';
+import { DeleteProductDTO } from './dto/deleteProductDTO';
+import { EditProductDTO } from './dto/updateProductDTO';
 import { ProductService } from './product.service';
 
 @Resolver(() => ProductEntity)
@@ -20,5 +22,42 @@ export class ProductResolver {
     @User('ID') UserID: number,
   ): Promise<ProductEntity> {
     return this.productService.createProduct(UserID, productData);
+  }
+
+  // get Product details by id with creator user name (only created user can edit this product)
+  @UseGuards(IsAuthenticated)
+  @Query(() => ProductEntity, {
+    description:
+      'get Product details by id with creator user name (only created user can edit this product)',
+  })
+  findProductByID(
+    @Args('ProductID', { type: () => Int }) productID: number,
+    @User('ID') userID: number,
+  ): Promise<ProductEntity> {
+    return this.productService.findProductByID(productID, userID);
+  }
+
+  // edit the product (only created user can edit this product)
+  @UseGuards(IsAuthenticated)
+  @Mutation(() => ProductEntity, {
+    description: 'edit the product (only created user can edit this product)',
+  })
+  updateProduct(
+    @Args('UpdateProductData') productData: EditProductDTO,
+    @User('ID') UserID: number,
+  ): Promise<ProductEntity> {
+    return this.productService.updateProduct(productData, UserID);
+  }
+
+  // Delete product by ID (only created user can edit this product)
+  @Mutation(() => DeleteProductDTO, {
+    description:
+      'Delete product by ID (only created user can edit this product)',
+  })
+  deleteProductByID(
+    @Args('ProductID') ProductID: number,
+    @User('ID') userID: number,
+  ): Promise<DeleteProductDTO> {
+    return this.productService.deleteProductByID(ProductID, userID);
   }
 }

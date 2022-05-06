@@ -59,6 +59,7 @@ export class ProductEntity {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'UserID' })
+  @Field(() => UserEntity, { nullable: true })
   ProductOwner: UserEntity;
 
   @Column({ comment: 'Name of the product', nullable: false })

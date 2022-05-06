@@ -146,6 +146,30 @@ query {
     }
   }
 }
+
+# to logout the user
+query {
+  logoutUser {
+    Message
+  }
+}
+
+# Get Product details by id with creator user name (only created user + login can edit this product)
+query {
+  findProductByID(ProductID: 1) {
+    ID,
+    CreatedDate
+    Product_Name
+    Price
+    IN_Stock
+    ProductOwner {
+      Name
+      Email
+    }
+  }
+}
+
+
 ```
 
 ## Mutation
@@ -163,6 +187,45 @@ mutation {
     Name
     Email
     CreatedDate
+  }
+}
+
+# create the product (after login into the system only)
+mutation {
+  createProduct(
+    CreateProductData: {
+      Name: "Mobile Phone"
+      Price: 38999.99
+      IN_Stock: true
+    }
+  ) {
+    Product_Name
+    Price
+    IN_Stock
+    UserID
+  }
+}
+
+# to update the product (only created user + login can edit this product)
+mutation {
+  updateProduct(
+    UpdateProductData: {
+      Name: "Poco X3 Pro"
+      ProductID: 1
+      Price: 18000
+      IN_Stock: false
+    }
+  ) {
+    Product_Name
+    Price
+    IN_Stock
+  }
+}
+
+# Delete product by ID (only created user + login can edit this product)
+mutation {
+  deleteProductByID(ProductID: 3) {
+    DeletedProductCount
   }
 }
 

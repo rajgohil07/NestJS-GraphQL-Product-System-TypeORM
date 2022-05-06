@@ -29,7 +29,12 @@ type ProductEntity {
   Price: Float!
   IN_Stock: Boolean!
   UserID: Int!
+  ProductOwner: UserEntity
   Product_Name: String!
+}
+
+type DeleteProductDTO {
+  DeletedProductCount: Int!
 }
 
 type LogOutUserDTO {
@@ -55,6 +60,11 @@ type Query {
 
   """logout to the system"""
   logoutUser: LogOutUserDTO!
+
+  """
+  get Product details by id with creator user name (only created user can edit this product)
+  """
+  findProductByID(ProductID: Int!): ProductEntity!
 }
 
 input LoginUserDTO {
@@ -71,6 +81,12 @@ type Mutation {
 
   """create Product and store user creator id with it"""
   createProduct(CreateProductData: CreateProductDTO!): ProductEntity!
+
+  """edit the product (only created user can edit this product)"""
+  updateProduct(UpdateProductData: EditProductDTO!): ProductEntity!
+
+  """Delete product by ID (only created user can edit this product)"""
+  deleteProductByID(ProductID: Float!): DeleteProductDTO!
 }
 
 input RegisterUserDTO {
@@ -88,4 +104,11 @@ input CreateProductDTO {
   Name: String!
   Price: Float!
   IN_Stock: Boolean!
+}
+
+input EditProductDTO {
+  Name: String!
+  Price: Float!
+  IN_Stock: Boolean!
+  ProductID: Int!
 }
