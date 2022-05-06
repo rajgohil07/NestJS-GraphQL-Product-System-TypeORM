@@ -21,6 +21,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""Product"""
+type ProductEntity {
+  ID: Int!
+  CreatedDate: DateTime!
+  UpdatedDate: DateTime!
+  Price: Float!
+  IN_Stock: Boolean!
+  UserID: Int!
+  Product_Name: String!
+}
+
 type LogOutUserDTO {
   Message: String!
 }
@@ -57,6 +68,9 @@ input LoginUserDTO {
 type Mutation {
   """to register the user into the system"""
   registerUser(registerUser: RegisterUserDTO!): UserEntity!
+
+  """create Product and store user creator id with it"""
+  createProduct(CreateProductData: CreateProductDTO!): ProductEntity!
 }
 
 input RegisterUserDTO {
@@ -68,4 +82,10 @@ input RegisterUserDTO {
 
   """user input value for Password"""
   Password: String!
+}
+
+input CreateProductDTO {
+  Name: String!
+  Price: Float!
+  IN_Stock: Boolean!
 }
