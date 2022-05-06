@@ -314,6 +314,21 @@ https://dev.to/nestjs/authentication-and-sessions-for-mvc-apps-with-nestjs-55a4
 
 # stack overflow link if you got 401 unauthorize every single time
 https://stackoverflow.com/questions/68390441/nestjs-graphql-passport-getting-unauthorised-error-from-guard
+
+# join column reference options
+https://typeorm.io/relations#joincolumn-options
+
+# enum column types
+https://typeorm.io/entities#enum-column-type
+
+# log on database connection
+https://typeorm.io/data-source#creating-a-new-datasource
+
+# custom decoder with GraphQL
+https://docs.nestjs.com/graphql/other-features#custom-decorators
+
+# NestJS Built-in HTTP exceptions
+https://docs.nestjs.com/exception-filters#built-in-http-exceptions
 ```
 
 ## Running the app
