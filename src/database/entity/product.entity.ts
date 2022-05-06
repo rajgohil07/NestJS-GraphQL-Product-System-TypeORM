@@ -60,4 +60,8 @@ export class ProductEntity {
   })
   @JoinColumn({ name: 'UserID' })
   ProductOwner: UserEntity;
+
+  @Column({ comment: 'Name of the product', nullable: false })
+  @Field()
+  Product_Name: string;
 }
