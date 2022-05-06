@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserEntity } from './user.entity';
 
 @ObjectType({ description: 'Product' })
 @Entity({ name: 'Product' })
@@ -43,4 +46,18 @@ export class ProductEntity {
   })
   @Field()
   IN_Stock: boolean;
+
+  @Column({
+    comment: 'relation with user table as User.ID',
+    nullable: false,
+    type: 'integer',
+  })
+  @Field(() => Int)
+  UserID: number;
+
+  @ManyToOne(() => UserEntity, (itemJoin) => itemJoin.ListOfProduct, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'UserID' })
+  ProductOwner: UserEntity;
 }

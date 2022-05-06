@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ProductEntity } from './product.entity';
 
 @ObjectType({ description: 'user entity' })
 @Entity({ name: 'User' })
@@ -42,4 +44,9 @@ export class UserEntity {
   })
   @Field()
   Password: string;
+
+  @OneToMany(() => ProductEntity, (user) => user.ProductOwner, {
+    cascade: true,
+  })
+  ListOfProduct: ProductEntity;
 }
