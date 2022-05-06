@@ -1,6 +1,6 @@
 # Description
 
-This is a basic project that shows how to use the nestjs passport local strategy, along with graphql and express sessions.
+A modest project based on products, where users may create products and only the creators of those products can modify and eliminate them, as well as passport-local-strategy to store data into sessions using express-session.
 
 ## Installation
 
@@ -16,6 +16,7 @@ npm install
 - Passport
 - Passport local strategy
 - TypeORM
+- One-to-many and Many-to-one relation
 
 ## Installed modules for local passport strategy
 
@@ -32,33 +33,65 @@ npm install
 
 ```bash
 # example
- getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    const gqlReq = ctx.getContext().req;
-    const {
-      LoginInput: { Email, Password },
-    } = ctx.getArgs();
-    gqlReq.body.Email = Email;
-    gqlReq.body.Password = Password;
-    return gqlReq;
+@Injectable()
+export class GQLAuthGuard extends AuthGuard('local') {
+  constructor() {
+    super();
   }
+
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+    const {
+      UserLoginData: { Email, Password },
+    } = ctx.getArgs();
+    const req = ctx.getContext().req;
+    req.body.Email = Email;
+    req.body.Password = Password;
+    return req;
+  }
+}
 ```
 
 2.Export the class which extends the `PassportStrategy` with Strategy argument(inherited from passport-local module) and call super() method.you can even specify the usernameField and passwordField inside the super method.
 
 ```bash
 #example
- constructor(private readonly authService: AuthService) {
+ @Injectable()
+export class PassportLocalStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly userService: UserService) {
     super({
       usernameField: 'Email',
       passwordField: 'Password',
     });
   }
+
+  validate(Email: string, Password: string) {
+    try {
+      return this.userService.userLogin({ Email, Password });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+}
 ```
 
 3.After that call the validate method inside the class.
 
 4.After that we need to call serializeUser and deserializeUser method to store the user data into the session.
+
+```bash
+#example
+@Injectable()
+export class SessionSerializer extends PassportSerializer {
+  serializeUser(user: any, done: Function) {
+    return done(null, user);
+  }
+  deserializeUser(payload: any, done: Function) {
+    return done(null, payload);
+  }
+}
+
+```
 
 5.To call serializeUser method we need to create new AuthGuard which will take request and pass it to the passport logIn method.
 
@@ -93,6 +126,17 @@ export class SessionLocalAuthGuard extends AuthGuard('local') {
 ```
 
 7.On successful login we can retrieve the current user by req.user we can even create custom decorator for that too, for that [please visit here](https://docs.nestjs.com/security/authentication#graphql 'please visit here title').
+
+```bash
+# example
+export const User = createParamDecorator(
+  (data: string, ctx: ExecutionContext) => {
+    const user = GqlExecutionContext.create(ctx).getContext().req.user;
+    return data ? user[data] : user;
+  },
+);
+
+```
 
 8.We can even implement new Guard to authenticate the user, for that we can do something like this.
 
