@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { UserModule } from 'src/user/user.module';
 import { ActivateSession } from './guard/activate.session.guard';
-import { GQLAuthGuard } from './guard/gql_authguard';
+import { GQLAuthGuard } from './guard/gql_auth.guard';
 import { IsAuthenticated } from './guard/isAuthenticated.guard';
 import { PassportLocalStrategy } from './passport.local.strategy';
 import { SessionSerializer } from './serialize.service';
