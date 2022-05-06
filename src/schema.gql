@@ -61,6 +61,9 @@ type Query {
   """logout to the system"""
   logoutUser: LogOutUserDTO!
 
+  """Get all the product by the User.ID"""
+  getAllProductByUser: [ProductEntity!]!
+
   """
   get Product details by id with creator user name (only created user can edit this product)
   """

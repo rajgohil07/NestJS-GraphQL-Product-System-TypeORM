@@ -15,6 +15,7 @@ import {
   loginResponseDTO,
   UserDecoderData,
 } from 'src/user/dto/loginResponseDTO';
+import { ProductEntity } from 'src/database/entity/product.entity';
 
 @Resolver()
 export class UserResolver {
@@ -45,5 +46,14 @@ export class UserResolver {
   @Query(() => LogOutUserDTO, { description: 'logout to the system' })
   logoutUser(): LogOutUserDTO {
     return { Message: constant.LOGOUT_SUCCESSFUL };
+  }
+
+  // get listing of the product (created user listing only)
+  @UseGuards(IsAuthenticated)
+  @Query(() => [ProductEntity], {
+    description: 'Get all the product by the User.ID',
+  })
+  getAllProductByUser(@User('ID') userID: number): Promise<ProductEntity[]> {
+    return this.userService.getAllProductByUser(userID);
   }
 }

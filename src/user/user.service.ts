@@ -11,12 +11,15 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ProductEntity } from 'src/database/entity/product.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    @InjectRepository(ProductEntity)
+    private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
   // to register the user into the system
@@ -65,5 +68,10 @@ export class UserService {
     }
     delete findUserData.Password;
     return findUserData;
+  }
+
+  // get listing of the product (created user listing only)
+  getAllProductByUser(UserID: number): Promise<ProductEntity[]> {
+    return this.productRepository.find({ where: { UserID } });
   }
 }

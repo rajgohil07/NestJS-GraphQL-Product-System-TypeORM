@@ -169,6 +169,16 @@ query {
   }
 }
 
+# Get all the product by the UserID
+query {
+  getAllProductByUser {
+    ID
+    CreatedDate
+    Product_Name
+    Price
+    IN_Stock
+  }
+}
 
 ```
 
