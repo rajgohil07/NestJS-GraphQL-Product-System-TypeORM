@@ -48,5 +48,6 @@ export class UserEntity {
   @OneToMany(() => ProductEntity, (user) => user.ProductOwner, {
     cascade: true,
   })
-  ListOfProduct: ProductEntity;
+  @Field(() => [ProductEntity], { nullable: true })
+  ListOfProduct: ProductEntity[];
 }

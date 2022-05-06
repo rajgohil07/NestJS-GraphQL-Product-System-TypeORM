@@ -74,4 +74,16 @@ export class UserService {
   getAllProductByUser(UserID: number): Promise<ProductEntity[]> {
     return this.productRepository.find({ where: { UserID } });
   }
+
+  // get listing of products with active user details (after login only)
+  getAllProductListingWithUserDetails(UserID: number): Promise<UserEntity> {
+    return this.userRepository.findOne({
+      where: {
+        ID: UserID,
+      },
+      relations: {
+        ListOfProduct: true,
+      },
+    });
+  }
 }

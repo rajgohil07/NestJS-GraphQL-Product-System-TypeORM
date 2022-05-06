@@ -14,6 +14,7 @@ type UserEntity {
   Name: String!
   Email: String!
   Password: String!
+  ListOfProduct: [ProductEntity!]
 }
 
 """
@@ -63,6 +64,9 @@ type Query {
 
   """Get all the product by the User.ID"""
   getAllProductByUser: [ProductEntity!]!
+
+  """get listing of products with active user details (after login only)"""
+  getAllProductListingWithUserDetails: UserEntity!
 
   """
   get Product details by id with creator user name (only created user can edit this product)

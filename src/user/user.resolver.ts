@@ -56,4 +56,16 @@ export class UserResolver {
   getAllProductByUser(@User('ID') userID: number): Promise<ProductEntity[]> {
     return this.userService.getAllProductByUser(userID);
   }
+
+  // get listing of products with active user details (after login only)
+  @UseGuards(IsAuthenticated)
+  @Query(() => UserEntity, {
+    description:
+      'get listing of products with active user details (after login only)',
+  })
+  getAllProductListingWithUserDetails(
+    @User('ID') userID: number,
+  ): Promise<UserEntity> {
+    return this.userService.getAllProductListingWithUserDetails(userID);
+  }
 }

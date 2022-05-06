@@ -180,6 +180,20 @@ query {
   }
 }
 
+# get listing of products with active user details (after login only)
+query {
+  getAllProductListingWithUserDetails {
+    Name
+    Email
+    ListOfProduct {
+      Product_Name
+      Price
+      IN_Stock
+    }
+  }
+}
+
+
 ```
 
 ## Mutation
