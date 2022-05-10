@@ -11,4 +11,7 @@ export const constant = {
   PRODUCT_NOT_FOUND: 'Sorry, requested product not found.',
   ONLY_OWNER_OF_THE_PRODUCT_CAN_PERFORM_THIS_ACTION:
     'Sorry, only product owner can perform this action.',
+  WEAK_PASSWORD_MESSAGE: 'Sorry your password is too weak.',
+  INVALID_NAME_RANGE_MESSAGE: 'Please provide name between 3 to 45 characters.',
+  INVALID_EMAIL_FORMAT: 'Please provide proper email address.',
 };

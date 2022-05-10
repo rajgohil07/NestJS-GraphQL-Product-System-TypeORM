@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { sessionConfig } from './config/session.config';
 import { connectDataSource, dataSource } from './config/dataSource.config';
+import { ValidationPipe } from '@nestjs/common';
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ const startServer = async () => {
   app.use(session(sessionConfig as SessionOptions));
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // declaring class-validator as global
+  app.useGlobalPipes(new ValidationPipe());
 
   // use of promise.all to boost up the performance
   await Promise.all([
