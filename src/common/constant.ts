@@ -14,4 +14,10 @@ export const constant = {
   WEAK_PASSWORD_MESSAGE: 'Sorry your password is too weak.',
   INVALID_NAME_RANGE_MESSAGE: 'Please provide name between 3 to 45 characters.',
   INVALID_EMAIL_FORMAT: 'Please provide proper email address.',
+  PLEASE_ENTER_THE_PRODUCT_NAME:
+    'Please enter the product name first to create the product.',
+  INVALID_PRODUCT_NAME:
+    'Please enter correct character name to create the product.',
+  PRICE_POSITIVE: 'Please provide positive price for the product.',
+  IN_STOCK_BOOLEAN: 'In stock value should be true or false',
 };
