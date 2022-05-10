@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { constant } from './constant';
@@ -16,4 +17,25 @@ const hashPassword = (plainPassword: string) =>
 const comparePassword = (plainPassword: string, hasPassword: string) =>
   bcrypt.compare(plainPassword, hasPassword);
 
-export { hashPassword, comparePassword };
+/* 
+   manual validation due to below issue 
+   reference https://github.com/nestjs/passport/issues/129 
+*/
+const emailAndPasswordValidation = (email: string, password: string) => {
+  // validate email
+  const emailRegex =
+    /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
+  const emailValidationResult = emailRegex.test(email);
+  if (!emailValidationResult) {
+    throw new BadRequestException(constant.INVALID_EMAIL_FORMAT);
+  }
+  // manual password validation
+  const passwordRegex =
+    /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{8,16}$/;
+  const passwordValidationResult = passwordRegex.test(password);
+  if (!passwordValidationResult) {
+    throw new BadRequestException(constant.WEAK_PASSWORD_MESSAGE);
+  }
+};
+
+export { hashPassword, comparePassword, emailAndPasswordValidation };

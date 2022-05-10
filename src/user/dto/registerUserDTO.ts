@@ -24,10 +24,11 @@ export class RegisterUserDTO {
 
   @Field({ nullable: false, description: 'user input value for Password' })
   @IsString()
-  @MinLength(8)
-  @MaxLength(16)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: constant.WEAK_PASSWORD_MESSAGE,
-  })
+  @Matches(
+    /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{8,16}$/,
+    {
+      message: constant.WEAK_PASSWORD_MESSAGE,
+    },
+  )
   Password: string;
 }
