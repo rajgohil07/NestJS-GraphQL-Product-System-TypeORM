@@ -1,15 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { constant } from 'src/common/constant';
-import {
-  IsAlpha,
-  IsEmail,
-  IsString,
-  Length,
-  Matches,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from 'class-validator';
+import { IsAlpha, IsEmail, IsString, Length, Matches } from 'class-validator';
 
 @InputType()
 export class RegisterUserDTO {

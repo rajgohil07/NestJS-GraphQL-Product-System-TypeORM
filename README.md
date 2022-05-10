@@ -17,6 +17,7 @@ npm install
 - Passport local strategy
 - TypeORM
 - One-to-many and Many-to-one relation
+- Backend validation
 
 ## Installed modules for local passport strategy
 
@@ -29,7 +30,7 @@ npm install
 
 ## Steps to implement passport local strategy along with graphql
 
-1.Create AuthGuard which take context from GraphQL and assign our Email and Password to req.body, because passport automatically gets your credentials from req.body but incase of graphql execution context is different so you have to manually set your args in req.body and for that getRequest method is used.
+1. Create AuthGuard which take context from GraphQL and assign our Email and Password to req.body, because passport automatically gets your credentials from req.body but incase of graphql execution context is different so you have to manually set your args in req.body and for that getRequest method is used.
 
 ```bash
 # example
@@ -52,7 +53,7 @@ export class GQLAuthGuard extends AuthGuard('local') {
 }
 ```
 
-2.Export the class which extends the `PassportStrategy` with Strategy argument(inherited from passport-local module) and call super() method.you can even specify the usernameField and passwordField inside the super method.
+2. Export the class which extends the `PassportStrategy` with Strategy argument(inherited from passport-local module) and call super() method.you can even specify the usernameField and passwordField inside the super method.
 
 ```bash
 #example
@@ -75,9 +76,9 @@ export class PassportLocalStrategy extends PassportStrategy(Strategy) {
 }
 ```
 
-3.After that call the validate method inside the class.
+3. After that call the validate method inside the class.
 
-4.After that we need to call serializeUser and deserializeUser method to store the user data into the session.
+4. After that we need to call serializeUser and deserializeUser method to store the user data into the session.
 
 ```bash
 #example
@@ -93,7 +94,7 @@ export class SessionSerializer extends PassportSerializer {
 
 ```
 
-5.To call serializeUser method we need to create new AuthGuard which will take request and pass it to the passport logIn method.
+5. To call serializeUser method we need to create new AuthGuard which will take request and pass it to the passport logIn method.
 
 ```bash
 #example
@@ -108,7 +109,7 @@ export class SessionLocalAuthGuard extends AuthGuard('local') {
 
 ```
 
-6.After that we need to call both guards in the login query/mutation by adding @UseGuards() decorator.
+6. After that we need to call both guards in the login query/mutation by adding @UseGuards() decorator.
 
 ```bash
 # example
@@ -125,7 +126,7 @@ export class SessionLocalAuthGuard extends AuthGuard('local') {
   }
 ```
 
-7.On successful login we can retrieve the current user by req.user we can even create custom decorator for that too, for that [please visit here](https://docs.nestjs.com/security/authentication#graphql 'please visit here title').
+7. On successful login we can retrieve the current user by req.user we can even create custom decorator for that too, for that [please visit here](https://docs.nestjs.com/security/authentication#graphql 'please visit here title').
 
 ```bash
 # example
@@ -138,7 +139,7 @@ export const User = createParamDecorator(
 
 ```
 
-8.We can even implement new Guard to authenticate the user, for that we can do something like this.
+8. We can even implement new Guard to authenticate the user, for that we can do something like this.
 
 ```bash
 @Injectable()
@@ -154,7 +155,7 @@ export class IsAuthenticated implements CanActivate {
 }
 ```
 
-9.And then we can call that guard on every query/mutation something like this
+9. And then we can call that guard on every query/mutation something like this
 
 ```bash
 @UseGuards(IsAuthenticated)
@@ -165,6 +166,61 @@ export class IsAuthenticated implements CanActivate {
     );
     return { AllUserData: userData, CurrentUser: user };
   }
+```
+
+10. We can also create logout guard when user logout in the system (user login first to use this functionality)
+
+```bash
+export class Logout implements CanActivate {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const ctx = GqlExecutionContext.create(context);
+    const req = ctx.getContext().req;
+    if (!req.user) {
+      throw new UnauthorizedException(constant.UNAUTHORIZED_ACCESS_MESSAGE);
+    }
+    await req.logout();
+    return true;
+  }
+}
+```
+
+And then we can add that guard to our logout graphql query
+
+```bash
+@UseGuards(Logout)
+  @Query(() => LogOutUserDTO, { description: 'logout to the system' })
+  logoutUser(): LogOutUserDTO {
+    return { Message: constant.LOGOUT_SUCCESSFUL };
+  }
+```
+
+11. Then we can use class-validator & class-transformer as a backend validation
+
+```bash
+#example (where all the decorator are imported from class-validator)
+@InputType()
+export class RegisterUserDTO {
+  @Field({ nullable: false, description: 'user input value for Name' })
+  @IsAlpha()
+  @Length(3, 45, { message: constant.INVALID_NAME_RANGE_MESSAGE })
+  Name: string;
+
+  @Field({ nullable: false, description: 'user input value for Email' })
+  @IsEmail({ message: constant.INVALID_EMAIL_FORMAT })
+  Email: string;
+
+  @Field({ nullable: false, description: 'user input value for Password' })
+  @IsString()
+  @Matches(
+    /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&? "])[a-zA-Z0-9!#$%&?]{8,16}$/,
+    {
+      message: constant.WEAK_PASSWORD_MESSAGE,
+    },
+  )
+  Password: string;
+}
+
+
 ```
 
 ## Query
@@ -329,6 +385,13 @@ https://docs.nestjs.com/graphql/other-features#custom-decorators
 
 # NestJS Built-in HTTP exceptions
 https://docs.nestjs.com/exception-filters#built-in-http-exceptions
+
+# class-validator and class-transformer git repo link
+https://github.com/typestack/class-validator
+
+# manual validation due to below issue
+https://github.com/nestjs/passport/issues/129
+
 ```
 
 ## Running the app
