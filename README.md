@@ -293,6 +293,20 @@ query {
   }
 }
 
+# Get all product listing along with owner info
+query {
+  findAllProductAlongWithOwnerInfo {
+    ID
+    Product_Name
+    Price
+    IN_Stock
+    ProductOwner {
+      ID
+      Name
+      Email
+    }
+  }
+}
 
 ```
 
