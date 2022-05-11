@@ -105,5 +105,13 @@ export class ProductService {
       ])
       .getMany();
     return data;
+
+    // we can also achieve the same result by using find method
+    // const data = await this.productRepository.find({
+    //   relations: {
+    //     ProductOwner: true,
+    //   },
+    // });
+    // return data;
   }
 }
