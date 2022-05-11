@@ -63,7 +63,7 @@ export class ProductResolver {
   }
 
   // Get all product listing along with owner info
-  // @UseGuards(IsAuthenticated)
+  @UseGuards(IsAuthenticated)
   @Query(() => [ProductEntity], {
     description: 'Get all product listing along with owner info',
   })
