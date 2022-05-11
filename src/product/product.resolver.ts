@@ -50,6 +50,7 @@ export class ProductResolver {
   }
 
   // Delete product by ID (only created user can edit this product)
+  @UseGuards(IsAuthenticated)
   @Mutation(() => DeleteProductDTO, {
     description:
       'Delete product by ID (only created user can edit this product)',
@@ -59,5 +60,14 @@ export class ProductResolver {
     @User('ID') userID: number,
   ): Promise<DeleteProductDTO> {
     return this.productService.deleteProductByID(ProductID, userID);
+  }
+
+  // Get all product listing along with owner info
+  // @UseGuards(IsAuthenticated)
+  @Query(() => [ProductEntity], {
+    description: 'Get all product listing along with owner info',
+  })
+  findAllProductAlongWithOwnerInfo(): Promise<ProductEntity[]> {
+    return this.productService.findAllProductAlongWithOwnerInfo();
   }
 }

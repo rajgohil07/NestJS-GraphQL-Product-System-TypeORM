@@ -72,6 +72,9 @@ type Query {
   get Product details by id with creator user name (only created user can edit this product)
   """
   findProductByID(ProductID: Int!): ProductEntity!
+
+  """Get all product listing along with owner info"""
+  findAllProductAlongWithOwnerInfo: [ProductEntity!]!
 }
 
 input LoginUserDTO {

@@ -4,12 +4,12 @@ import { ProductEntity } from 'src/database/entity/product.entity';
 import { Repository } from 'typeorm';
 import { CreateProductDTO } from './dto/createProductDTO';
 import { EditProductDTO } from './dto/updateProductDTO';
+import { DeleteProductDTO } from './dto/deleteProductDTO';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { DeleteProductDTO } from './dto/deleteProductDTO';
 
 @Injectable()
 export class ProductService {
@@ -87,5 +87,23 @@ export class ProductService {
     await this.findProductByID(projectID, userID);
     const deleteProductCount = await this.productRepository.delete(projectID);
     return { DeletedProductCount: deleteProductCount.affected };
+  }
+
+  // Get all product listing along with owner info
+  async findAllProductAlongWithOwnerInfo(): Promise<ProductEntity[]> {
+    const data = await this.productRepository
+      .createQueryBuilder('projectData')
+      .innerJoin('projectData.ProductOwner', 'OwnerInfo')
+      .select([
+        'projectData.ID',
+        'projectData.Product_Name',
+        'projectData.Price',
+        'projectData.IN_Stock',
+        'OwnerInfo.ID',
+        'OwnerInfo.Email',
+        'OwnerInfo.Name',
+      ])
+      .getMany();
+    return data;
   }
 }
