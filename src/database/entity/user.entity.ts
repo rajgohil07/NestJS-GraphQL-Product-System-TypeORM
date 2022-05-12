@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ProductEntity } from './product.entity';
+import { UserOrderEntity } from './user.order.entity';
 
 @ObjectType({ description: 'user entity' })
 @Entity({ name: 'User' })
@@ -50,4 +51,8 @@ export class UserEntity {
   })
   @Field(() => [ProductEntity], { nullable: true })
   ListOfProduct: ProductEntity[];
+
+  @OneToMany(() => UserOrderEntity, (UserData) => UserData.ProductData)
+  @Field(() => [UserOrderEntity])
+  UserOrderData: UserOrderEntity[];
 }

@@ -1,6 +1,8 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { CommonEntity } from './common.entity';
+import { ProductEntity } from './product.entity';
+import { UserEntity } from './user.entity';
 
 @Entity({ name: 'UserOrder' })
 @ObjectType({ implements: () => [CommonEntity] })
@@ -12,4 +14,14 @@ export class UserOrderEntity extends CommonEntity {
   @Column({ nullable: false })
   @Field(() => Int)
   ProductID: number;
+
+  @JoinColumn({ name: 'UserID' })
+  @ManyToOne(() => UserEntity, (OrderData) => OrderData.UserOrderData)
+  @Field(() => UserEntity)
+  BuyerData: UserEntity;
+
+  @JoinColumn({ name: 'ProductID' })
+  @ManyToOne(() => ProductEntity, (ProductData) => ProductData.UserOrderData)
+  @Field(() => ProductEntity)
+  ProductData: ProductEntity;
 }

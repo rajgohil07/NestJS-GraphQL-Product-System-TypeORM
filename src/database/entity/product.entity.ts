@@ -5,10 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { UserOrderEntity } from './user.order.entity';
 
 @ObjectType({ description: 'Product' })
 @Entity({ name: 'Product' })
@@ -65,4 +67,8 @@ export class ProductEntity {
   @Column({ comment: 'Name of the product', nullable: false })
   @Field()
   Product_Name: string;
+
+  @OneToMany(() => UserOrderEntity, (productData) => productData.ProductData)
+  @Field(() => [ProductEntity])
+  UserOrderData: ProductEntity[];
 }
