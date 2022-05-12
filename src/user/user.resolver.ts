@@ -1,5 +1,5 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GQLAuthGuard } from 'src/auth/guard/gql_auth.guard';
 import { constant } from 'src/common/constant';
 import { User } from 'src/custom_decoder/user.decoder';
@@ -11,11 +11,11 @@ import { ActivateSession } from 'src/auth/guard/activate.session.guard';
 import { IsAuthenticated } from 'src/auth/guard/isAuthenticated.guard';
 import { LogOutUserDTO } from './dto/logoutUserDTO';
 import { Logout } from 'src/auth/guard/logout.guard';
+import { ProductEntity } from 'src/database/entity/product.entity';
 import {
   loginResponseDTO,
   UserDecoderData,
 } from 'src/user/dto/loginResponseDTO';
-import { ProductEntity } from 'src/database/entity/product.entity';
 
 @Resolver()
 export class UserResolver {
@@ -68,4 +68,12 @@ export class UserResolver {
   ): Promise<UserEntity> {
     return this.userService.getAllProductListingWithUserDetails(userID);
   }
+
+  // buy a product (Note:A user can not buy same product again)
+  @UseGuards(IsAuthenticated)
+  @Mutation()
+  buyProduct(
+    @Args('ProductID', { type: () => Int }) ProductID: number,
+    @User('ID') UserID: number,
+  ) {}
 }

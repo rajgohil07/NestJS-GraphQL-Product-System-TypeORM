@@ -5,13 +5,14 @@ import { UserEntity } from 'src/database/entity/user.entity';
 import { LoginUserDTO } from 'src/user/dto/LoginUserDTO';
 import { RegisterUserDTO } from 'src/user/dto/registerUserDTO';
 import { Repository } from 'typeorm';
+import { ProductEntity } from 'src/database/entity/product.entity';
+import { ProductService } from 'src/product/product.service';
 import {
   BadGatewayException,
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ProductEntity } from 'src/database/entity/product.entity';
 
 @Injectable()
 export class UserService {
@@ -20,6 +21,7 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly productService: ProductService,
   ) {}
 
   // to register the user into the system
@@ -85,5 +87,26 @@ export class UserService {
         ListOfProduct: true,
       },
     });
+  }
+
+  // find by UserID whether user exist or not
+  async findByUserID(userID: number) {
+    const findUser = await this.userRepository.findOne({
+      where: { ID: userID },
+      select: ['ID'],
+    });
+    if (!findUser.ID) {
+      throw new NotFoundException(constant.USER_DOES_NOT_EXIST);
+    }
+    return findUser;
+  }
+
+  // buy a product (Note:A user can not buy same product again)
+  async buyProduct(productID: number, userID: number) {
+    // validate both product and user using promise.all
+    await Promise.all([
+      this.productService.validateProductByID(productID),
+      this.findByUserID(userID),
+    ]);
   }
 }

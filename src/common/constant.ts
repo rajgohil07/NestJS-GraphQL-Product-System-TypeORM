@@ -21,4 +21,5 @@ export const constant = {
   PRICE_POSITIVE: 'Please provide positive price for the product.',
   IN_STOCK_BOOLEAN: 'In stock value should be true or false',
   TRANSACTION_ID_LENGTH: 5,
+  USER_DOES_NOT_EXIST: 'User does not exist in the database',
 };

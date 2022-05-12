@@ -114,4 +114,16 @@ export class ProductService {
     // });
     // return data;
   }
+
+  // get Product details by id
+  async validateProductByID(productID: number): Promise<ProductEntity> {
+    const findProduct = await this.productRepository.findOne({
+      where: { ID: productID },
+      select: ['ID'],
+    });
+    if (!findProduct) {
+      throw new NotFoundException(constant.PRODUCT_NOT_FOUND);
+    }
+    return findProduct;
+  }
 }
