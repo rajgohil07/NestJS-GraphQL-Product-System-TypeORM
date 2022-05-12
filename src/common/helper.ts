@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { BadRequestException } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
@@ -38,4 +39,15 @@ const emailAndPasswordValidation = (email: string, password: string) => {
   }
 };
 
-export { hashPassword, comparePassword, emailAndPasswordValidation };
+/*
+    Generate random string for the TransactionID
+*/
+const GenerateTransactionID = () =>
+  crypto.randomBytes(constant.TRANSACTION_ID_LENGTH).toString('hex');
+
+export {
+  hashPassword,
+  comparePassword,
+  emailAndPasswordValidation,
+  GenerateTransactionID,
+};

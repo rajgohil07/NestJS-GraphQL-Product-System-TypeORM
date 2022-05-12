@@ -20,4 +20,5 @@ export const constant = {
     'Please enter correct character name to create the product.',
   PRICE_POSITIVE: 'Please provide positive price for the product.',
   IN_STOCK_BOOLEAN: 'In stock value should be true or false',
+  TRANSACTION_ID_LENGTH: 5,
 };
