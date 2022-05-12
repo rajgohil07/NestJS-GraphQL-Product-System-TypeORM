@@ -15,6 +15,14 @@ export class UserOrderEntity extends CommonEntity {
   @Field(() => Int)
   ProductID: number;
 
+  @Column({
+    nullable: false,
+    comment: 'TransactionID for specific order',
+    unique: true,
+  })
+  @Field()
+  TransactionID: string;
+
   @JoinColumn({ name: 'UserID' })
   @ManyToOne(() => UserEntity, (OrderData) => OrderData.UserOrderData, {
     onDelete: 'SET NULL',
