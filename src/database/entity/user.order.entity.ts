@@ -16,12 +16,16 @@ export class UserOrderEntity extends CommonEntity {
   ProductID: number;
 
   @JoinColumn({ name: 'UserID' })
-  @ManyToOne(() => UserEntity, (OrderData) => OrderData.UserOrderData)
+  @ManyToOne(() => UserEntity, (OrderData) => OrderData.UserOrderData, {
+    onDelete: 'SET NULL',
+  })
   @Field(() => UserEntity)
   BuyerData: UserEntity;
 
   @JoinColumn({ name: 'ProductID' })
-  @ManyToOne(() => ProductEntity, (ProductData) => ProductData.UserOrderData)
+  @ManyToOne(() => ProductEntity, (ProductData) => ProductData.UserOrderData, {
+    onDelete: 'CASCADE',
+  })
   @Field(() => ProductEntity)
   ProductData: ProductEntity;
 }
