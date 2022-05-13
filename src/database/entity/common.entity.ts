@@ -9,13 +9,13 @@ import {
 export abstract class CommonEntity {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
-  ID: number;
+  ID?: number;
 
   @CreateDateColumn()
   @Field(() => Date)
-  CreatedDate: Date;
+  CreatedDate?: Date;
 
   @UpdateDateColumn()
   @Field(() => Date)
-  UpdatedDate: Date;
+  UpdatedDate?: Date;
 }

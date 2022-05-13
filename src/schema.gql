@@ -6,6 +6,28 @@ type CheckConnectionDTO {
   connectionStatus: String!
 }
 
+type UserOrderEntity implements CommonEntity {
+  ID: Int!
+  CreatedDate: DateTime!
+  UpdatedDate: DateTime!
+  UserID: Int!
+  ProductID: Int!
+  TransactionID: String!
+  BuyerData: UserEntity!
+  ProductData: ProductEntity!
+}
+
+interface CommonEntity {
+  ID: Int!
+  CreatedDate: DateTime!
+  UpdatedDate: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 """user entity"""
 type UserEntity {
   ID: Int!
@@ -15,12 +37,8 @@ type UserEntity {
   Email: String!
   Password: String!
   ListOfProduct: [ProductEntity!]
+  UserOrderData: [UserOrderEntity!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 """Product"""
 type ProductEntity {
@@ -32,6 +50,7 @@ type ProductEntity {
   UserID: Int!
   ProductOwner: UserEntity
   Product_Name: String!
+  UserOrderData: [ProductEntity!]!
 }
 
 type DeleteProductDTO {
@@ -51,6 +70,12 @@ type UserDecoderData {
 type loginResponseDTO {
   loginMessage: String!
   userData: UserDecoderData!
+}
+
+type CreateOrderResponseDTO {
+  Message: String!
+  TransactionID: String!
+  ProductName: String!
 }
 
 type Query {
@@ -88,6 +113,9 @@ input LoginUserDTO {
 type Mutation {
   """to register the user into the system"""
   registerUser(registerUser: RegisterUserDTO!): UserEntity!
+
+  """buy a product (Note:A user can not buy same product again)"""
+  buyProduct(ProductID: Int!): CreateOrderResponseDTO!
 
   """create Product and store user creator id with it"""
   createProduct(CreateProductData: CreateProductDTO!): ProductEntity!

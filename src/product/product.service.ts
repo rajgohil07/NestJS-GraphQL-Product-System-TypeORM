@@ -119,7 +119,7 @@ export class ProductService {
   async validateProductByID(productID: number): Promise<ProductEntity> {
     const findProduct = await this.productRepository.findOne({
       where: { ID: productID },
-      select: ['ID'],
+      select: ['Product_Name'],
     });
     if (!findProduct) {
       throw new NotFoundException(constant.PRODUCT_NOT_FOUND);

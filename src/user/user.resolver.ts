@@ -16,6 +16,7 @@ import {
   loginResponseDTO,
   UserDecoderData,
 } from 'src/user/dto/loginResponseDTO';
+import { CreateOrderResponseDTO } from './dto/createOrderResponseDTO';
 
 @Resolver()
 export class UserResolver {
@@ -71,9 +72,13 @@ export class UserResolver {
 
   // buy a product (Note:A user can not buy same product again)
   @UseGuards(IsAuthenticated)
-  @Mutation()
+  @Mutation(() => CreateOrderResponseDTO, {
+    description: 'buy a product (Note:A user can not buy same product again)',
+  })
   buyProduct(
-    @Args('ProductID', { type: () => Int }) ProductID: number,
-    @User('ID') UserID: number,
-  ) {}
+    @Args('ProductID', { type: () => Int }) productID: number,
+    @User('ID') userID: number,
+  ): Promise<CreateOrderResponseDTO> {
+    return this.userService.buyProduct(productID, userID);
+  }
 }

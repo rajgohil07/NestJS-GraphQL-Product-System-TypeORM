@@ -22,4 +22,7 @@ export const constant = {
   IN_STOCK_BOOLEAN: 'In stock value should be true or false',
   TRANSACTION_ID_LENGTH: 5,
   USER_DOES_NOT_EXIST: 'User does not exist in the database',
+  YOU_ALREADY_BUY_THIS_ORDER: 'You already purchased this item',
+  PURCHASED_ORDER_SUCCESS_MESSAGE:
+    'Congratulations!, you have successfully place your order',
 };

@@ -1,6 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { constant } from 'src/common/constant';
-import { comparePassword, hashPassword } from 'src/common/helper';
+import {
+  comparePassword,
+  GenerateTransactionID,
+  hashPassword,
+} from 'src/common/helper';
 import { UserEntity } from 'src/database/entity/user.entity';
 import { LoginUserDTO } from 'src/user/dto/LoginUserDTO';
 import { RegisterUserDTO } from 'src/user/dto/registerUserDTO';
@@ -10,9 +14,12 @@ import { ProductService } from 'src/product/product.service';
 import {
   BadGatewayException,
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { UserOrderEntity } from 'src/database/entity/user.order.entity';
+import { CreateOrderResponseDTO } from './dto/createOrderResponseDTO';
 
 @Injectable()
 export class UserService {
@@ -22,6 +29,8 @@ export class UserService {
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
     private readonly productService: ProductService,
+    @InjectRepository(UserOrderEntity)
+    private readonly userOrderRepository: Repository<UserOrderEntity>,
   ) {}
 
   // to register the user into the system
@@ -101,12 +110,61 @@ export class UserService {
     return findUser;
   }
 
+  // validation to check wether the user has already purchased the product or not
+  async validateUserHasPurchasedTheProduct(
+    productID: number,
+    userID: number,
+  ): Promise<boolean> {
+    const find = await this.userOrderRepository.findOne({
+      where: {
+        UserID: userID,
+        ProductID: productID,
+      },
+      select: ['ID'],
+    });
+    if (find) {
+      throw new ForbiddenException(constant.YOU_ALREADY_BUY_THIS_ORDER);
+    }
+    return true;
+  }
+
+  // get unique transactionID for order
+  async getTransactionID(): Promise<string> {
+    const getUniqueTransactionID: string = GenerateTransactionID();
+    const findTransactionID = await this.userOrderRepository.findOne({
+      where: { TransactionID: getUniqueTransactionID },
+      select: ['TransactionID'],
+    });
+    if (findTransactionID && findTransactionID.TransactionID) {
+      this.getTransactionID();
+    }
+    return getUniqueTransactionID;
+  }
+
   // buy a product (Note:A user can not buy same product again)
-  async buyProduct(productID: number, userID: number) {
+  async buyProduct(
+    productID: number,
+    userID: number,
+  ): Promise<CreateOrderResponseDTO> {
     // validate both product and user using promise.all
-    await Promise.all([
+    const [productData] = await Promise.all([
       this.productService.validateProductByID(productID),
       this.findByUserID(userID),
+      this.validateUserHasPurchasedTheProduct(productID, userID),
     ]);
+    const transactionID: string = `#TXN${await this.getTransactionID()}`;
+    const createOrderObject: UserOrderEntity = {
+      UserID: userID,
+      ProductID: productID,
+      TransactionID: transactionID,
+    };
+    const createOrder: UserOrderEntity =
+      this.userOrderRepository.create(createOrderObject);
+    await this.userOrderRepository.save(createOrder);
+    return {
+      ProductName: productData.Product_Name,
+      TransactionID: transactionID,
+      Message: constant.PURCHASED_ORDER_SUCCESS_MESSAGE,
+    };
   }
 }
