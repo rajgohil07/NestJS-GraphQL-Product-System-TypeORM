@@ -5,8 +5,13 @@ import { Repository } from 'typeorm';
 import { CreateProductDTO } from './dto/createProductDTO';
 import { EditProductDTO } from './dto/updateProductDTO';
 import { DeleteProductDTO } from './dto/deleteProductDTO';
+import { UserService } from 'src/user/user.service';
+import { TotalEaringsDTO } from './dto/TotalEarings.DTO';
+import { formatter } from 'src/common/helper';
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -14,6 +19,9 @@ import {
 @Injectable()
 export class ProductService {
   constructor(
+    // to solve circular dependency issue reference https://docs.nestjs.com/fundamentals/circular-dependency
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
     @InjectRepository(ProductEntity)
     private productRepository: Repository<ProductEntity>,
   ) {}
@@ -141,5 +149,17 @@ export class ProductService {
       .addSelect(['userOrder', 'userOrderData.Name'])
       .getOne();
     return productAndBuyerListData;
+  }
+
+  // Get total earning of the seller
+  async getSellerTotalEarnings(userID: number): Promise<TotalEaringsDTO> {
+    await this.userService.findByUserID(userID);
+    const { totalEarings } = await this.productRepository
+      .createQueryBuilder('product')
+      .where('product.UserID=:userID', { userID })
+      .innerJoin('product.UserOrderData', 'UserOrderData')
+      .select('SUM(product.Price)', 'totalEarings')
+      .getRawOne();
+    return { TotalEarings: formatter(totalEarings) };
   }
 }
