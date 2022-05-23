@@ -17,6 +17,7 @@ npm install
 - Passport local strategy
 - TypeORM
 - One-to-many and Many-to-one relation
+- Many-to-many relation
 - Backend validation
 
 ## Installed modules for local passport strategy
@@ -308,6 +309,18 @@ query {
   }
 }
 
+# Get buyers listing of particular product
+query {
+  getProductBuyerList(ProductID: 1) {
+    Product_Name
+    UserOrderData {
+      BuyerData {
+        Name
+      }
+    }
+  }
+}
+
 ```
 
 ## Mutation
@@ -364,6 +377,15 @@ mutation {
 mutation {
   deleteProductByID(ProductID: 3) {
     DeletedProductCount
+  }
+}
+
+# Buy a product (Note:A user can not buy same product again)
+mutation {
+  buyProduct(ProductID: 1) {
+    Message
+    ProductName
+    TransactionID
   }
 }
 
