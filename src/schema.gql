@@ -50,11 +50,7 @@ type ProductEntity {
   UserID: Int!
   ProductOwner: UserEntity
   Product_Name: String!
-  UserOrderData: [ProductEntity!]!
-}
-
-type DeleteProductDTO {
-  DeletedProductCount: Int!
+  UserOrderData: [UserOrderEntity!]!
 }
 
 type LogOutUserDTO {
@@ -76,6 +72,10 @@ type CreateOrderResponseDTO {
   Message: String!
   TransactionID: String!
   ProductName: String!
+}
+
+type DeleteProductDTO {
+  DeletedProductCount: Int!
 }
 
 type Query {
@@ -100,6 +100,7 @@ type Query {
 
   """Get all product listing along with owner info"""
   findAllProductAlongWithOwnerInfo: [ProductEntity!]!
+  getProductBuyerList(ProductID: Int!): ProductEntity!
 }
 
 input LoginUserDTO {

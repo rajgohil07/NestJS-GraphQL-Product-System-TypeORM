@@ -69,6 +69,6 @@ export class ProductEntity {
   Product_Name: string;
 
   @OneToMany(() => UserOrderEntity, (productData) => productData.ProductData)
-  @Field(() => [ProductEntity])
-  UserOrderData: ProductEntity[];
+  @Field(() => [UserOrderEntity])
+  UserOrderData: UserOrderEntity[];
 }

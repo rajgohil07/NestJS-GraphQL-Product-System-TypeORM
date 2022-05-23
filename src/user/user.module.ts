@@ -12,7 +12,7 @@ import { UserOrderEntity } from 'src/database/entity/user.order.entity';
   imports: [
     TypeOrmModule.forFeature([UserEntity, ProductEntity, UserOrderEntity]),
     forwardRef(() => AuthModule),
-    ProductModule,
+    forwardRef(() => ProductModule),
   ],
   exports: [UserService],
   providers: [UserResolver, UserService],

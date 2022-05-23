@@ -126,4 +126,20 @@ export class ProductService {
     }
     return findProduct;
   }
+
+  // get buyers listing of particular product
+  async getProductBuyerList(productID: number, userID: number) {
+    // validate product and the user
+    await this.findProductByID(productID, userID);
+    const productAndBuyerListQuery =
+      this.productRepository.createQueryBuilder('productListing');
+    const productAndBuyerListData = await productAndBuyerListQuery
+      .select(['productListing.Product_Name'])
+      .leftJoin('productListing.UserOrderData', 'userOrder')
+      .leftJoin('userOrder.BuyerData', 'userOrderData')
+      .where('productListing.ID=:ProductID', { ProductID: productID })
+      .addSelect(['userOrder', 'userOrderData.Name'])
+      .getOne();
+    return productAndBuyerListData;
+  }
 }

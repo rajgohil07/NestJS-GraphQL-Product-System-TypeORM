@@ -70,4 +70,14 @@ export class ProductResolver {
   findAllProductAlongWithOwnerInfo(): Promise<ProductEntity[]> {
     return this.productService.findAllProductAlongWithOwnerInfo();
   }
+
+  // get buyers listing of particular product
+  @UseGuards(IsAuthenticated)
+  @Query(() => ProductEntity)
+  getProductBuyerList(
+    @Args('ProductID', { type: () => Int }) productID: number,
+    @User('ID') userID: number,
+  ) {
+    return this.productService.getProductBuyerList(productID, userID);
+  }
 }
