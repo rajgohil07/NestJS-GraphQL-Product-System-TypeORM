@@ -1,16 +1,18 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { constant } from 'src/common/constant';
+import { UserOrderEntity } from 'src/database/entity/user.order.entity';
+import { CreateOrderResponseDTO } from './dto/createOrderResponseDTO';
+import { UserEntity } from 'src/database/entity/user.entity';
+import { LoginUserDTO } from 'src/user/dto/loginUserDTO';
+import { RegisterUserDTO } from 'src/user/dto/registerUserDTO';
+import { Repository } from 'typeorm';
+import { ProductEntity } from 'src/database/entity/product.entity';
+import { ProductService } from 'src/product/product.service';
 import {
   comparePassword,
   GenerateTransactionID,
   hashPassword,
 } from 'src/common/helper';
-import { UserEntity } from 'src/database/entity/user.entity';
-import { LoginUserDTO } from 'src/user/dto/LoginUserDTO';
-import { RegisterUserDTO } from 'src/user/dto/registerUserDTO';
-import { Repository } from 'typeorm';
-import { ProductEntity } from 'src/database/entity/product.entity';
-import { ProductService } from 'src/product/product.service';
 import {
   BadGatewayException,
   BadRequestException,
@@ -18,8 +20,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UserOrderEntity } from 'src/database/entity/user.order.entity';
-import { CreateOrderResponseDTO } from './dto/createOrderResponseDTO';
 
 @Injectable()
 export class UserService {
@@ -104,7 +104,7 @@ export class UserService {
       where: { ID: userID },
       select: ['ID'],
     });
-    if (!findUser.ID) {
+    if (!findUser) {
       throw new NotFoundException(constant.USER_DOES_NOT_EXIST);
     }
     return findUser;

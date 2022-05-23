@@ -321,6 +321,14 @@ query {
   }
 }
 
+# Get total earning of the seller
+query {
+  getSellerTotalEarnings {
+    TotalEarings
+  }
+}
+
+
 ```
 
 ## Mutation
@@ -427,6 +435,9 @@ https://github.com/typestack/class-validator
 
 # manual validation due to below issue
 https://github.com/nestjs/passport/issues/129
+
+# Solve circular dependency issue using the forward reference technique
+https://docs.nestjs.com/fundamentals/circular-dependency
 
 ```
 

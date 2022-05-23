@@ -4,7 +4,7 @@ import { GQLAuthGuard } from 'src/auth/guard/gql_auth.guard';
 import { constant } from 'src/common/constant';
 import { User } from 'src/custom_decoder/user.decoder';
 import { UserEntity } from 'src/database/entity/user.entity';
-import { LoginUserDTO } from 'src/user/dto/LoginUserDTO';
+import { LoginUserDTO } from 'src/user/dto/loginUserDTO';
 import { RegisterUserDTO } from 'src/user/dto/registerUserDTO';
 import { UserService } from './user.service';
 import { ActivateSession } from 'src/auth/guard/activate.session.guard';

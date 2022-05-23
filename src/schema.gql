@@ -78,6 +78,10 @@ type DeleteProductDTO {
   DeletedProductCount: Int!
 }
 
+type TotalEaringsDTO {
+  TotalEarings: Float!
+}
+
 type Query {
   checkServer: CheckConnectionDTO!
 
@@ -100,7 +104,12 @@ type Query {
 
   """Get all product listing along with owner info"""
   findAllProductAlongWithOwnerInfo: [ProductEntity!]!
+
+  """get buyers listing of particular product"""
   getProductBuyerList(ProductID: Int!): ProductEntity!
+
+  """Get total earning of the seller"""
+  getSellerTotalEarnings: TotalEaringsDTO!
 }
 
 input LoginUserDTO {

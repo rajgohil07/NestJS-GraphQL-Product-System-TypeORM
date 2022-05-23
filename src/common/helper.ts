@@ -45,9 +45,18 @@ const emailAndPasswordValidation = (email: string, password: string) => {
 const GenerateTransactionID = () =>
   crypto.randomBytes(constant.TRANSACTION_ID_LENGTH).toString('hex');
 
+/*
+   Get round off values with 2 decimal places 
+*/
+const formatter = (value: number) => {
+  const stringValue = Number(value).toFixed(2);
+  return Number(stringValue);
+};
+
 export {
   hashPassword,
   comparePassword,
   emailAndPasswordValidation,
   GenerateTransactionID,
+  formatter,
 };

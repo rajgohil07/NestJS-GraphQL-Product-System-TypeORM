@@ -5,7 +5,7 @@ import { IsAlpha, IsEmail, IsString, Length, Matches } from 'class-validator';
 @InputType()
 export class RegisterUserDTO {
   @Field({ nullable: false, description: 'user input value for Name' })
-  @IsAlpha()
+  @IsString()
   @Length(3, 45, { message: constant.INVALID_NAME_RANGE_MESSAGE })
   Name: string;
 
